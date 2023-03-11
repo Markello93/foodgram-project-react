@@ -47,6 +47,7 @@ docker-compose exec web python manage.py collectstatic --no-input
 ```
 docker-compose exec web python manage.py load_data
 ```
+
 ## Примеры
 Доступ к документации API представлен по ссылке:
 [http://158.160.13.46/api/docs/redoc/](http://158.160.13.46/api/docs/redoc.html)
