@@ -23,9 +23,6 @@ services:
     restart: always
 
   frontend:
-#    build:
-#      context: ../frontend
-#      dockerfile: Dockerfile
     image: markkryl93/foodgram_front:v1.0
     volumes:
       - ./frontend/:/app/result_build/
