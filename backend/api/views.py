@@ -132,7 +132,9 @@ class UserViewSet(UserViewSet):
             return Response(status=HTTP_204_NO_CONTENT)
         return Response(status=HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    @action(
+        detail=False, methods=['get'], permission_classes=[IsAuthenticated]
+    )
     def subscriptions(self, request):
         queryset = request.user.followed.all()
         pages = self.paginate_queryset(queryset)
