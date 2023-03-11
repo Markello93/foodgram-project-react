@@ -1,6 +1,5 @@
 from django.db.models import Sum
 from django.http import HttpResponse
-
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import status, viewsets
@@ -11,7 +10,8 @@ from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
-from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag, Favorites, ShoppingCart
+from recipes.models import (Ingredient, RecipeIngredient, Recipe,
+                            Tag, Favorites, ShoppingCart)
 from users.models import Subscribe, User
 from .filters import IngredientsFilter, RecipeFilter
 from .mixins import ListViewSet

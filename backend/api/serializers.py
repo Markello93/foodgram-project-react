@@ -1,7 +1,7 @@
 import base64
+
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
-
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
@@ -88,7 +88,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         tags = self.initial_data.get('tags')
         if not ingredients:
             raise serializers.ValidationError({
-                'ingredients': 'Необходим минимум один ингредиент для рецепта'})
+                'ingredients': 'Необходим минимум один ингредиент для рецепта'
+            })
         if not tags:
             raise serializers.ValidationError({
                 'tags': 'Необходим минимум один тег для рецепта'})
@@ -132,7 +133,9 @@ class UserSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if not self.context.get('request').user.is_authenticated:
             return False
-        return Subscribe.objects.filter(user=request.user, author=instance).exists()
+        return Subscribe.objects.filter(
+            user=request.user, author=instance
+        ).exists()
 
     class Meta:
         model = User

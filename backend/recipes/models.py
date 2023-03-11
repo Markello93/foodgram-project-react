@@ -1,6 +1,5 @@
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
-
 from users.models import User
 
 
@@ -8,11 +7,11 @@ class Tag(models.Model):
     """Модель тегов для рецептов пользователей."""
     name = models.CharField('Название тега', max_length=20, unique=True)
     color = models.CharField('Цвет тега', max_length=7, validators=[
-            RegexValidator(
-                regex="^#(?:[0-9a-fA-F]{3}){1,2}$",
-                message='Введите цвет в формате HEX',
-            )
-        ], unique=True)
+        RegexValidator(
+            regex="^#(?:[0-9a-fA-F]{3}){1,2}$",
+            message='Введите цвет в формате HEX',
+        )
+    ], unique=True)
     slug = models.SlugField('Ссылка на тег', unique=True)
 
     class Meta:
