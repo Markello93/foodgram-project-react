@@ -2,11 +2,19 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import UniqueConstraint
 
+from django.conf import settings
+
 
 class User(AbstractUser):
     first_name = models.CharField('first name', max_length=150, blank=False)
     last_name = models.CharField('last name', max_length=150, blank=False)
     email = models.EmailField('email address', blank=False, unique=True)
+    role = models.CharField(
+        'Роль пользователя',
+        choices=settings.USER_ROLE_CHOICES,
+        default='user',
+        max_length=15,
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
@@ -23,6 +31,18 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    @property
+    def is_anonymous(self):
+        return self.role == settings.ADMIN
+
+    @property
+    def is_moderator(self):
+        return self.role == settings.MODERATOR
+
+    @property
+    def is_user(self):
+        return self.role == settings.USER
 
 
 class Subscribe(models.Model):
