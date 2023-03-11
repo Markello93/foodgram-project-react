@@ -32,7 +32,8 @@ class IngredientView(ListViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     filter_backends = (IngredientsFilter,)
-    search_fields = ('^name',)
+    search_fields = ('^name', 'name')
+    ordering_fields = ['name']
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
 
