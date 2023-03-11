@@ -2,13 +2,15 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
+from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
+                                   HTTP_400_BAD_REQUEST)
+from rest_framework.viewsets import ModelViewSet
 
 from recipes.models import (Ingredient, RecipeIngredient, Recipe,
                             Tag, Favorites, ShoppingCart)
@@ -37,7 +39,7 @@ class IngredientView(ListViewSet):
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
 
-class RecipeView(viewsets.ModelViewSet):
+class RecipeView(ModelViewSet):
     queryset = Recipe.objects.all()
     filter_backends = (DjangoFilterBackend, )
     filterset_class = RecipeFilter
@@ -60,12 +62,13 @@ class RecipeView(viewsets.ModelViewSet):
             serializer = ShortRecipeSerializer(recipe, data=request.data)
             serializer.is_valid(raise_exception=True)
             model.objects.create(user=request.user, recipe=recipe)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=HTTP_201_CREATED)
         if request.method == 'DELETE':
             get_object_or_404(
                 model, user=request.user, recipe=recipe
             ).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=HTTP_204_NO_CONTENT)
+        return Response(status=HTTP_400_BAD_REQUEST)
 
     @action(
         detail=True,
@@ -114,7 +117,6 @@ class UserViewSet(UserViewSet):
     )
     def subscribe(self, request, id):
         author = get_object_or_404(User, pk=id)
-
         if request.method == 'POST':
             serializer = SubscribeSerializer(
                 author, data=request.data,
@@ -122,15 +124,15 @@ class UserViewSet(UserViewSet):
             )
             serializer.is_valid(raise_exception=True)
             Subscribe.objects.create(user=request.user, author=author)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
+            return Response(serializer.data, status=HTTP_201_CREATED)
         if request.method == 'DELETE':
             get_object_or_404(
                 Subscribe, user=request.user, author=author
             ).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=HTTP_204_NO_CONTENT)
+        return Response(status=HTTP_400_BAD_REQUEST)
 
-    @action(detail=False,methods=['get'], permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def subscriptions(self, request):
         queryset = request.user.followed.all()
         pages = self.paginate_queryset(queryset)
