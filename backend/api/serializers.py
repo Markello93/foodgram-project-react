@@ -102,8 +102,8 @@ class RecipeSerializer(serializers.ModelSerializer):
             if ingredient_item in ingredient_list:
                 raise serializers.ValidationError('Укажите уникальный '
                                                   'ингредиент')
-            if int(ingredient_item['amount']) <= 0 or\
-                    int(ingredient_item['amount']) > 32766:
+            amount = int(ingredient_item['amount'])
+            if amount <= 0 or amount > 32766:
                 raise serializers.ValidationError({
                     'ingredients': ('Укажите корректное количество '
                                     'ингредиента,в диапазоне от 0,01 до 32766')
