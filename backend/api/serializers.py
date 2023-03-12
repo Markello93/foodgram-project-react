@@ -87,18 +87,20 @@ class RecipeSerializer(serializers.ModelSerializer):
         ingredients = self.initial_data.get('ingredients')
         tags = self.initial_data.get('tags')
         if not ingredients:
-            raise serializers.ValidationError({
-                'ingredients': 'Необходим минимум один ингредиент для рецепта'
-            })
+            raise serializers.ValidationError(
+                'Необходим минимум один ингредиент для рецепта'
+            )
         if not tags:
-            raise serializers.ValidationError({
-                'tags': 'Необходим минимум один тег для рецепта'})
+            raise serializers.ValidationError(
+                'Необходим минимум один тег для рецепта'
+            )
         ingredient_list = []
         for ingredient_item in ingredients:
             if not Ingredient.objects.filter(
                     pk=ingredient_item['id']).exists():
-                raise serializers.ValidationError({
-                    'ingredients': 'Ингредиента с таким id не существует'})
+                raise serializers.ValidationError(
+                    'Ингредиента с таким id не существует'
+                )
             if int(ingredient_item['id']) in ingredient_list:
                 raise serializers.ValidationError('Укажите уникальный '
                                                   'ингредиент')
@@ -107,10 +109,10 @@ class RecipeSerializer(serializers.ModelSerializer):
                                                   'не может быть пустым')
             amount = int(ingredient_item['amount'])
             if amount <= 0 or amount > 32766:
-                raise serializers.ValidationError({
-                    'ingredients': ('Укажите корректное количество '
-                                    'ингредиента,в диапазоне от 0,01 до 32766')
-                })
+                raise serializers.ValidationError(
+                    'Укажите корректное количество ингредиента, '
+                    'в диапазоне от 0,01 до 32766'
+                )
             ingredient_list.append(ingredient_item['id'])
         data['ingredients'] = ingredients
         data['tags'] = tags
