@@ -99,16 +99,19 @@ class RecipeSerializer(serializers.ModelSerializer):
                     pk=ingredient_item['id']).exists():
                 raise serializers.ValidationError({
                     'ingredients': 'Ингредиента с таким id не существует'})
-            if ingredient_item in ingredient_list:
+            if int(ingredient_item['id']) in ingredient_list:
                 raise serializers.ValidationError('Укажите уникальный '
                                                   'ингредиент')
+            if 'amount' not in ingredient_item:
+                raise serializers.ValidationError('Количество ингредиента '
+                                                  'не может быть пустым')
             amount = int(ingredient_item['amount'])
             if amount <= 0 or amount > 32766:
                 raise serializers.ValidationError({
                     'ingredients': ('Укажите корректное количество '
                                     'ингредиента,в диапазоне от 0,01 до 32766')
                 })
-            ingredient_list.append(ingredient_item)
+            ingredient_list.append(ingredient_item['id'])
         data['ingredients'] = ingredients
         data['tags'] = tags
         return data

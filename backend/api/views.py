@@ -49,8 +49,8 @@ class RecipeView(ModelViewSet):
         return RecipeSerializer
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
         serializer.is_valid(raise_exception=True)
+        serializer.save(author=self.request.user)
 
     @staticmethod
     def favorite_shopping_cart(request, pk, model):
