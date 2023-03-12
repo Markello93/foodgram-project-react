@@ -1,4 +1,5 @@
-from django.core.validators import MinValueValidator, RegexValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, \
+    RegexValidator
 from django.db import models
 
 from users.models import User
@@ -81,7 +82,8 @@ class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     amount = models.PositiveSmallIntegerField(default=1, validators=[
-        MinValueValidator(0.01, 'Количество должно быть больше 0.01')
+        MinValueValidator(0.01, 'Количество должно быть больше 0.01'),
+        MaxValueValidator(32766, 'Количество должно быть меньше 32766')
     ])
 
     class Meta:

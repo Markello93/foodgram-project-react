@@ -1,7 +1,14 @@
-from django.conf import settings
+from enum import Enum
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import UniqueConstraint
+
+
+class UserRole(Enum):
+    ADMIN = 'admin'
+    USER = 'user'
+    MODERATOR = 'moderator'
 
 
 class User(AbstractUser):
@@ -10,8 +17,8 @@ class User(AbstractUser):
     email = models.EmailField('email address', blank=False, unique=True)
     role = models.CharField(
         'Роль пользователя',
-        choices=settings.USER_ROLE_CHOICES,
-        default='user',
+        choices=[(role.value, role.name) for role in UserRole],
+        default=UserRole.USER.value,
         max_length=15,
     )
 
@@ -32,16 +39,16 @@ class User(AbstractUser):
         return self.username
 
     @property
-    def is_anonymous(self):
-        return self.role == settings.ADMIN
-
-    @property
     def is_moderator(self):
-        return self.role == settings.MODERATOR
+        return self.role == UserRole.USER.MODERATOR
 
     @property
     def is_user(self):
-        return self.role == settings.USER
+        return self.role == UserRole.USER.USER
+
+    @property
+    def is_admin(self):
+        return self.role == UserRole.USER.ADMIN
 
 
 class Subscribe(models.Model):
