@@ -128,9 +128,7 @@ class UserViewSet(UserViewSet):
         detail=False, methods=['get'], permission_classes=[IsAuthenticated]
     )
     def subscriptions(self, request):
-
-        followed_authors = request.user.follower.all()
-        queryset = User.objects.filter(id__in=followed_authors.values('id'))
+        queryset = User.objects.filter(followed__user=request.user)
         pages = self.paginate_queryset(queryset)
         serializer = SubscribeSerializer(
             pages, many=True, context={'request': request}
