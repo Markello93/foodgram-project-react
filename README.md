@@ -50,6 +50,6 @@ docker-compose exec web python manage.py load_data
 
 ## Примеры
 Доступ к документации API представлен по ссылке:
-[http://158.160.13.46/api/docs/redoc/](http://158.160.13.46/api/docs/redoc.html)
+[http://158.160.13.46/api/docs/redoc/](http://158.160.30.248/api/docs/redoc.html)
 
 ![foodgram_workflow](https://github.com/Markello93/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
